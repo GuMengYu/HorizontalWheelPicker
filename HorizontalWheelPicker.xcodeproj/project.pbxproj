@@ -32,8 +32,8 @@
 		D5A92FA52EC01BF500AAAD41 = {
 			isa = PBXGroup;
 			children = (
-				D5A92FB02EC01BF500AAAD41 /* HorizontalWheelPicker */,
 				D5A92FAF2EC01BF500AAAD41 /* Products */,
+				D5A92FB02EC01BF500AAAD41 /* HorizontalWheelPicker */,
 			);
 			sourceTree = "<group>";
 		};
