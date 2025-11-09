@@ -8,32 +8,48 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var config: WheelPicker.Config = .init(count: 10, steps: 5, spacing: 20, multiplier: 10)
-    @State private var value: CGFloat = 10
-    var body: some View {
-        NavigationStack {
-            VStack {
-                HStack(alignment: .lastTextBaseline, spacing: 5, content: {
-                    Text(verbatim: "\(value)")
-                        .font(.headline.bold())
-                        .contentTransition(.numericText(value: value))
-                        .animation(.snappy,value: value)
-                })
-                WheelPicker(config: config, value: $value)
-                    .frame(height: 60)
-                Button("To Position 60") {
-                    withAnimation {
-                        value = 60
-                    }
-                }
-                .padding(.top, 20)
+  @State private var config: WheelPicker.Config = .init(
+    count: 10, steps: 5, spacing: 20, multiplier: 10,
+    minValue: -100, maxValue: 100)
+  @State private var value: CGFloat = 0
+  var body: some View {
+    NavigationStack {
+      VStack {
+        HStack(
+          alignment: .lastTextBaseline, spacing: 5,
+          content: {
+            Text(verbatim: "\(value)")
+              .font(.headline.bold())
+              .contentTransition(.numericText(value: value))
+              .animation(.snappy, value: value)
+          })
+        WheelPicker(config: config, value: $value)
+          .frame(height: 60)
+        HStack(spacing: 20) {
+          Button("To Position 60") {
+            withAnimation {
+              value = 60
             }
-            .navigationTitle("Wheel Picker")
+          }
+          Button("To Position -50") {
+            withAnimation {
+              value = -50
+            }
+          }
+          Button("To Position 0") {
+            withAnimation {
+              value = 0
+            }
+          }
         }
-        
+        .padding(.top, 20)
+      }
+      .navigationTitle("Wheel Picker")
     }
+
+  }
 }
 
 #Preview {
-    ContentView()
+  ContentView()
 }

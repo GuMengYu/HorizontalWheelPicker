@@ -18,16 +18,17 @@ struct WheelPicker: View {
       let horiztalPadding = proxy.size.width / 2
       ScrollView(.horizontal) {
         HStack(spacing: config.spacing) {
-          let totalSteps = config.steps * config.count
+          let totalSteps = config.steps * config.totalRange
           ForEach(0...totalSteps, id: \.self) { index in
             let remainder = index % config.steps
+            let actualValue = config.minValue + (index / config.steps) * config.multiplier
             Divider()
               .background(remainder == 0 ? Color.primary : .gray)
               .frame(width: 0, height: remainder == 0 ? 20 : 10, alignment: .center)
               .frame(maxHeight: 20, alignment: .center)
               .overlay(alignment: .bottom) {
                 if remainder == 0 && config.showText {
-                  Text("\((index / config.steps) * config.multiplier)")
+                  Text("\(actualValue)")
                     .font(.caption)
                     .fontWeight(.semibold)
                     .textScale(.secondary)
@@ -45,7 +46,8 @@ struct WheelPicker: View {
       .scrollPosition(
         id: .init(
           get: {
-            let position: Int? = isLoaded ? (Int(value) * config.steps) / config.multiplier : nil
+            let position: Int? =
+              isLoaded ? ((Int(value) - config.minValue) * config.steps) / config.multiplier : nil
             return position
           },
           set: { newValue in
@@ -57,7 +59,9 @@ struct WheelPicker: View {
                 feedbackGenerator.impactOccurred()
                 lastPosition = newValue
               }
-              value = CGFloat(newValue) / CGFloat(config.steps) * CGFloat(config.multiplier)
+              value =
+                CGFloat(config.minValue)
+                + (CGFloat(newValue) / CGFloat(config.steps) * CGFloat(config.multiplier))
             }
           })
       )
@@ -84,6 +88,20 @@ struct WheelPicker: View {
     var spacing: CGFloat = 5
     var showText: Bool = true
     var multiplier: Int = 10
+    /// 最小值，支持负数
+    var minValue: Int = 0
+    /// 最大值
+    var maxValue: Int? = nil
+
+    /// 计算实际的最大值
+    var actualMaxValue: Int {
+      return maxValue ?? (count * multiplier)
+    }
+
+    /// 计算实际的范围总数
+    var totalRange: Int {
+      return (actualMaxValue - minValue) / multiplier
+    }
   }
 }
 
